@@ -89,7 +89,7 @@ export default function Picker({ active, pool, teams, canAssign, onPick }: Props
     }, [active, pool, allPositions, teamId, query, maxPrice, minForm, sort, eligibleOnly, teams]);
 
     if (!active) {
-        return <div className="picker-hint">Select a slot to pick a player.</div>;
+        return <div className="picker-hint"></div>;
     }
 
     return (
@@ -99,7 +99,6 @@ export default function Picker({ active, pool, teams, canAssign, onPick }: Props
                     Pick {active.type === 'BENCH_OUT' ? 'Outfield Sub' : active.type.replace('_', ' ')}
                 </div>
 
-                {/* Filters */}
                 <div className="filters">
                     <input
                         placeholder="Search name or team…"

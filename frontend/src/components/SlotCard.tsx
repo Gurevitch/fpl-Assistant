@@ -24,51 +24,81 @@ export default function SlotCard({
     onToggleCaptain, onToggleVice,
     onDragStart, onDrop, onDragOver,
 }: Props) {
+    const displayName = player
+        ? (player.webName || player.lastName || `${player.firstName} ${player.lastName}`)
+        : '';
 
-    const displayName = player ? (player.webName || player.lastName || `${player.firstName} ${player.lastName}`) : '';
+    // NEW: tooltip that includes GW points
+    const title = player
+        ? `${displayName}${team ? ` • ${team}` : ''} • £${player.price.toFixed(1)}m • Pts ${player.eventPoints}`
+        : '';
 
     return (
         <div
             className={`player-card ${tint}`}
             onClick={onClick}
-            draggable={!!player}
+            title={title}                            // ← use the computed title
+            draggable={!!player}                     // ← only draggable when there’s a player
             onDragStart={() => onDragStart?.(slot)}
-            onDragOver={(e) => onDragOver?.(slot, e)}
             onDrop={() => onDrop?.(slot)}
-            title={player ? `${displayName}${team ? ` • ${team}` : ''} • £${player.price.toFixed(1)}m` : ''}
+            onDragOver={(e) => onDragOver?.(slot, e)}
         >
             {player ? (
                 <>
+                    {isCaptain && <span className="cap-badge">C</span>}
+                    {!isCaptain && isVice && <span className="vice-badge">V</span>}
+
                     <div className="name">{displayName}</div>
+
                     <div className="meta">
                         <span className="meta-item">£{player.price.toFixed(1)}m</span>
                         {team && <span className="meta-item">{team}</span>}
-                        <span className="chip">Form {player.form.toFixed(1)}</span>
-                        {typeof player.selectedByPercent === 'number' && !Number.isNaN(player.selectedByPercent) && (
-                            <span className="chip">{`Sel ${player.selectedByPercent.toFixed(1)}%`}</span>
+                        <span className="chip">GW {player.eventPoints}</span>
+                        {Number.isFinite(player.form as number) && (
+                            <span className="chip">Form {player.form.toFixed(1)}</span>
+                        )}
+                        {Number.isFinite(player.selectedByPercent as number) && (
+                            <span className="chip">Sel {player.selectedByPercent!.toFixed(1)}%</span>
                         )}
                     </div>
 
-                    {/* Captain / Vice badges on starters only */}
-                    {(isCaptain || isVice) && (
-                        <div className="badge-cv">
-                            {isCaptain && <span className="badge badge-c">C</span>}
-                            {isVice && <span className="badge badge-v">V</span>}
+                    {(onToggleCaptain || onToggleVice) && (    // ← show only for starters
+                        <div className="cap-row" onClick={(e) => e.stopPropagation()}>
+                            <button
+                                className={`cap-btn ${isCaptain ? 'active' : ''}`}
+                                disabled={!onToggleCaptain}
+                                onClick={() => onToggleCaptain?.()}
+                                title="Set as Captain"
+                            >
+                                C
+                            </button>
+                            <button
+                                className={`cap-btn ${isVice ? 'active' : ''}`}
+                                disabled={!onToggleVice}
+                                onClick={() => onToggleVice?.()}
+                                title="Set as Vice-Captain"
+                            >
+                                V
+                            </button>
                         </div>
                     )}
 
-                    {(onToggleCaptain || onToggleVice) && (
-                        <div className="cv-controls">
-                            {onToggleCaptain && <button className="cv-btn" onClick={(e) => { e.stopPropagation(); onToggleCaptain(); }}>C</button>}
-                            {onToggleVice && <button className="cv-btn" onClick={(e) => { e.stopPropagation(); onToggleVice(); }}>V</button>}
-                        </div>
-                    )}
-
-                    <button className="x" onClick={(e) => { e.stopPropagation(); onRemove(); }}>×</button>
+                    <button
+                        className="x"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onRemove?.();
+                        }}
+                        title="Remove"
+                    >
+                        ×
+                    </button>
                 </>
             ) : (
                 <div className="placeholder">{label}</div>
             )}
         </div>
     );
+
+
 }
