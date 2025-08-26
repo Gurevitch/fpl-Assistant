@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: fpl-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: fpl_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - fpl-net
+
+  app:
+    build: .
+    container_name: fpl-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      GEMINI_API_KEY: "AIzaSyCxvAsiBErT2pKB18o6ZZshHGtu99gtzbI"
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: password
+      DB_NAME: fpl_db
+      DB_SSL: disable
+    networks:
+      - fpl-net
+
+networks:
+  fpl-net:
+
+volumes:
+  pgdata:

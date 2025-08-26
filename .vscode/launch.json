@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "go",
+            "request": "launch",
+            "name": "Run Go Server",
+            "program": "${workspaceFolder}/backend/cmd/main.go",
+            "args": [
+                "import",
+                "fpl"
+            ],
+            "env": {
+                "GEMINI_API_KEY": "AIzaSyCxvAsiBErT2pKB18o6ZZshHGtu99gtzbI"
+            }
+        }
+    ]
+}

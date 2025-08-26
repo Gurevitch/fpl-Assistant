@@ -1,0 +1,12 @@
+[database]
+# database = "fpl.db"
+# type = "postgres"
+# host = "localhost"
+# port = 5432
+# user = "postgres"
+# pass = "password"
+# name = "fpl_db"
+# sslmode = "disable"
+# -------------- #
+ type = "sqlite"
+ database = "data/fpl.db"
