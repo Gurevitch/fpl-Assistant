@@ -31,6 +31,7 @@ export async function loadPlayers(): Promise<Player[]> {
         expectedPoints: toNum(p.expectedPoints) ?? toNum(p.predictedPoints),
         form: Number(p.Form ?? p.form ?? p.ValueForm ?? 0),
         selectedByPercent: toNum(p.SelectedByPercent ?? p.selectedByPercent),
+        eventPoints: Number(p.event_points ?? p.eventPoints ?? 0),
     }));
     return list;
 }

@@ -18,7 +18,7 @@ type Player struct {
 	TransfersInEvent  int
 	TransfersOut      int
 	TransfersOutEvent int
-	EventPoints       int       `gorm:"not null"`
+	EventPoints       int       `gorm:"not null" json:"event_points"`
 	ValueForm         float64   `gorm:"size:10"`
 	Form              string    `gorm:"size:10"`
 	TotalPoints       int       `gorm:"not null"`

@@ -12,7 +12,11 @@ export default function LineupPage() {
     const [pool, setPool] = useState<Player[]>([]);
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateStatus, setUpdateStatus] = useState<'idle' | 'ok' | 'error'>('idle');
+    // Bench Boost toggle (controls whether bench is counted)
+    const [chips, setChips] = useState({ bboost: false });
 
+    // Prefer expectedPoints, fallback to form, else 0
+    const pointsOf = (p: Player) => p.eventPoints ?? 0;
     // lineup state (formation, slots, captain/vice, active slot)
     const L = useLineup();
 
@@ -37,7 +41,24 @@ export default function LineupPage() {
     }, [assigned]);
     const totalCost = assigned.reduce((s, p) => s + p.price, 0);
     const budgetLeft = Math.max(0, Math.round((100 - totalCost) * 10) / 10);
+    // Sum starters
+    const baseStart = L.starters.reduce((sum, p) => sum + pointsOf(p), 0);
 
+    // Captain bonus: add +1× captain points (base already counts 1×)
+    const captainBonus = L.captainId
+        ? (() => {
+            const cap = L.starters.find(p => p.id === L.captainId);
+            return cap ? pointsOf(cap) : 0;
+        })()
+        : 0;
+
+    // Bench only if Bench Boost is active
+    const benchPts = chips.bboost
+        ? L.bench.reduce((sum, p) => sum + pointsOf(p), 0)
+        : 0;
+
+    // Final total to display
+    const teamXP = baseStart + captainBonus + benchPts;
     // constraints
     const occupantOf = L.occupantOf;
     const canAssign = (slot: ActiveSlot, p: Player) => {
@@ -124,7 +145,16 @@ export default function LineupPage() {
                 <div className="controls-row">
                     <div className="badge-box">Budget: <strong>£{budgetLeft.toFixed(1)}m</strong></div>
                     <div className="badge-box">{assigned.length}/15 selected</div>
+                    <div className="badge-box">GW Pts: <strong>{teamXP.toFixed(1)}</strong></div>
 
+                    <label className="toggle">
+                        <input
+                            type="checkbox"
+                            checked={chips.bboost}
+                            onChange={e => setChips(s => ({ ...s, bboost: e.target.checked }))}
+                        />
+                        Bench Boost
+                    </label>
                     <label>Formation</label>
                     <select value={L.formation} onChange={e => L.setFormation(e.target.value as Formation)}>
                         {ALLOWED_FORMATIONS.map(f => <option key={f} value={f}>{f}</option>)}

@@ -16,54 +16,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type fplResponse struct {
-	Teams   []fplTeam   `json:"teams"`
-	Players []fplPlayer `json:"elements"`
-	Chips   []fplChip   `json:"chips"`
-}
-
-type fplTeam struct {
-	ID        int    `json:"id"`
-	Name      string `json:"name"`
-	ShortName string `json:"short_name"`
-	Code      int    `json:"code"`
-}
-
-// fplChip mirrors the FPL "chips" JSON
-type fplChip struct {
-	ID         int             `json:"id"`
-	Name       string          `json:"name"`
-	Number     int             `json:"number"`
-	StartEvent int             `json:"start_event"`
-	StopEvent  int             `json:"stop_event"`
-	ChipType   string          `json:"chip_type"`
-	Overrides  fplChipOverride `json:"overrides"`
-}
-type fplChipOverride struct {
-	Rules          map[string]any `json:"rules"`           // usually empty or key:value (e.g. squad_squadsize)
-	Scoring        map[string]any `json:"scoring"`         // usually empty
-	ElementTypes   []int          `json:"element_types"`   // often []
-	PickMultiplier *int           `json:"pick_multiplier"` // can be null
-}
-type fplPlayer struct {
-	ID                int     `json:"id"`
-	FirstName         string  `json:"first_name"`
-	SecondName        string  `json:"second_name"`
-	Team              int     `json:"team"`
-	NowCost           float64 `json:"now_cost"`
-	TotalPoints       int     `json:"total_points"`
-	ElementType       int     `json:"element_type"`
-	SelectedByPercent string  `json:"selected_by_percent"`
-	TransfersIn       int     `json:"transfers_in"`
-	TransfersInEvent  int     `json:"transfers_in_event"`
-	TransfersOut      int     `json:"transfers_out"`
-	TransfersOutEvent int     `json:"transfers_out_event"`
-	ValueForm         string  `json:"value_form"`
-	Form              string  `json:"form"`
-	WebName           string  `json:"web_name"`
-	EventPoints       int     `json:"event_points"`
-}
-
 func ImportFPLData(ctx context.Context) error {
 	resp, err := http.Get("https://fantasy.premierleague.com/api/bootstrap-static/")
 	if err != nil {
@@ -71,7 +23,7 @@ func ImportFPLData(ctx context.Context) error {
 	}
 	defer resp.Body.Close()
 
-	var data fplResponse
+	var data model.FplResponse
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return fmt.Errorf("❌ failed to decode response: %w", err)
 	}
@@ -105,7 +57,8 @@ func ImportFPLData(ctx context.Context) error {
 
 	return nil
 }
-func importPlayers(db *gorm.DB, players []fplPlayer) error {
+
+func importPlayers(db *gorm.DB, players []model.FplPlayer) error {
 	for _, p := range players {
 		currentPrice := p.NowCost / 10.0
 		selectedPercent, _ := strconv.ParseFloat(p.SelectedByPercent, 64)
@@ -130,6 +83,7 @@ func importPlayers(db *gorm.DB, players []fplPlayer) error {
 			ValueForm:         valueForm,
 			EventPoints:       p.EventPoints,
 			UpdatedAt:         time.Now(),
+			CreatedAt:         time.Now(),
 		}
 
 		var existing model.Player
@@ -164,7 +118,7 @@ func importPlayers(db *gorm.DB, players []fplPlayer) error {
 	}
 	return nil
 }
-func importChips(db *gorm.DB, chips []fplChip) error {
+func importChips(db *gorm.DB, chips []model.FplChip) error {
 	for _, c := range chips {
 		ovBytes, err := json.Marshal(c.Overrides)
 		if err != nil {
@@ -177,6 +131,7 @@ func importChips(db *gorm.DB, chips []fplChip) error {
 			StartEvent: c.StartEvent,
 			StopEvent:  c.StopEvent,
 			ChipType:   c.ChipType,
+			CreatedAt:  time.Now(),
 			Overrides:  datatypes.JSON(ovBytes),
 		}
 		if err := db.Save(&row).Error; err != nil {

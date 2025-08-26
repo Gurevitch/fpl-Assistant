@@ -19,6 +19,7 @@ export interface Player {
     expectedPoints?: number;
     form: number;                 // required (we parse from backend)
     selectedByPercent?: number;
+    eventPoints: number;
 }
 
 export type ActiveSlot =
