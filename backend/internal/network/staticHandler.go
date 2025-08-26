@@ -18,11 +18,11 @@ func makeStaticFileHandler(r *chi.Mux) {
 	}
 
 	projectRoot := filepath.Join(currentDir, "..", "..")
-	clientBuildDir := path.Join(projectRoot, "frontend", "build")
-	clientStaticDir := path.Join(clientBuildDir, "static") // CRA uses /static
+	clientBuildDir := path.Join(projectRoot, "frontend", "dist")
+	clientStaticDir := path.Join(clientBuildDir, "assets")
 
 	// Serve static files
-	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir(clientStaticDir))))
+	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir(clientStaticDir))))
 
 	// Serve index.html for root
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
