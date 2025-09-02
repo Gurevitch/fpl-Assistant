@@ -7,7 +7,17 @@ export interface Team {
     shortName: string;
     code: string;
 }
-
+export type Fixture = {
+    id: number;
+    event: number | null;
+    kickoff_time: string | null;           // ISO string (UTC) or null
+    started: boolean;
+    finished: boolean;
+    team_a: number;                        // away team id
+    team_h: number;                        // home team id
+    team_a_difficulty: 1 | 2 | 3 | 4 | 5;  // FDR (away)
+    team_h_difficulty: 1 | 2 | 3 | 4 | 5;  // FDR (home)
+};
 export interface Player {
     id: number;
     firstName: string;

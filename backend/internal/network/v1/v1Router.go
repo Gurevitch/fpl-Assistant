@@ -21,6 +21,7 @@ func NewV1Router() chi.Router {
 
 	r.Get("/players", GetAllPlayers)
 	r.Get("/teams", GetAllTeams)
+	r.Get("/fixtures", GetAllFixtures)
 
 	return r
 }
@@ -57,7 +58,15 @@ func GetAllTeams(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(teams)
 }
-
+func GetAllFixtures(w http.ResponseWriter, r *http.Request) {
+	var fixtures []model.Fixture
+	if err := repository.DB.Find(&fixtures).Error; err != nil {
+		http.Error(w, "Failed to fetch players", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(fixtures)
+}
 func AskGeminiHandler(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Message string `json:"message"`

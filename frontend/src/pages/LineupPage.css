@@ -8,88 +8,237 @@
     repeating-linear-gradient(to bottom, #0e7a3e 0 60px, #0c6d37 60px 120px);
   box-sizing: border-box;
 }
+
 .pitch-lines {
   position: absolute;
   inset: 96px 3% 160px;
-  border: 2px solid rgba(255,255,255,0.7);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   border-radius: 12px;
   pointer-events: none;
 }
-.pitch-lines::before { content:""; position:absolute; left:50%; top:0; bottom:0; width:2px; background:rgba(255,255,255,0.7); transform:translateX(-50%); }
-.pitch-lines::after  { content:""; position:absolute; left:50%; top:50%; width:140px; height:140px; border:2px solid rgba(255,255,255,0.7); border-radius:50%; transform:translate(-50%,-50%); }
+
+.pitch-lines::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateX(-50%);
+}
+
+.pitch-lines::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 140px;
+  height: 140px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
 
 /* Header / controls */
-.top-bar { max-width: 980px; margin: 0 auto 8px; display:flex; align-items:center; justify-content:space-between; }
-.controls-row { display:flex; gap:10px; align-items:center; }
-.controls-row select { background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.7); color:#fff; padding:6px 10px; border-radius:8px; }
-.badge-box { background: rgba(255,255,255,.12); padding:6px 10px; border-radius:8px; }
+.top-bar {
+  max-width: 980px;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.controls-row select {
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .7);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.badge-box {
+  background: rgba(255, 255, 255, .12);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
 
 /* Lineup rows */
-.lineup { max-width:980px; margin:0 auto; }
-.row { display:grid; gap:18px; margin:44px 0; justify-items:center; }
-.row.one { grid-template-columns: repeat(1, 1fr); }
+.lineup {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.row {
+  display: grid;
+  gap: 18px;
+  margin: 44px 0;
+  justify-items: center;
+}
+
+.row.one {
+  grid-template-columns: repeat(1, 1fr);
+}
 
 /* Cards */
 .player-card {
   position: relative;
   width: 140px;
   text-align: center;
-  border: 2px solid rgba(255,255,255,.8);
+  border: 2px solid rgba(255, 255, 255, .8);
   border-radius: 18px;
-  background: rgba(0,0,0,.22);
+  background: rgba(0, 0, 0, .22);
   padding: 10px 12px;
-  box-shadow: 0 10px 18px rgba(0,0,0,.18);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, .18);
   cursor: pointer;
 }
-.player-card .name { font-weight: 800; }
+
+.player-card .name {
+  font-weight: 800;
+}
+
 .player-card .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 10px;               /* <- consistent spacing between items */
+  gap: 6px 10px;
+  /* <- consistent spacing between items */
   justify-content: center;
   align-items: center;
   margin-top: 4px;
 }
+
 /* small neutral tokens for price & team (optional, gives a little padding) */
 .player-card .meta .meta-item {
-  white-space: nowrap;         /* <- prevents £6.6m and TOT from breaking */
-}
-.player-card .placeholder { opacity:.75; }
-.player-card .x {
-  position:absolute; right:8px; top:6px; border:none; background:transparent; color:#fff; font-size:18px; cursor:pointer;
+  white-space: nowrap;
+  /* <- prevents £6.6m and TOT from breaking */
 }
 
-.gk  { background: rgba(30,144,255,.25); }
-.def { background: rgba(255,255,255,.12); }
-.mid { background: rgba(255,165,0,.25); }
-.fwd { background: rgba(220,20,60,.25); }
-.bench { background: rgba(0,0,0,.32); }
+.player-card .placeholder {
+  opacity: .75;
+}
+
+.player-card .x {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.gk {
+  background: rgba(30, 144, 255, .25);
+}
+
+.def {
+  background: rgba(255, 255, 255, .12);
+}
+
+.mid {
+  background: rgba(255, 165, 0, .25);
+}
+
+.fwd {
+  background: rgba(220, 20, 60, .25);
+}
+
+.bench {
+  background: rgba(0, 0, 0, .32);
+}
 
 /* Bench bar */
-.bench { max-width:980px; margin:0 auto; text-align:center; }
-.bench-strip { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.bench {
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bench-strip {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
 /* Picker */
-.picker { max-width:1100px; margin: 24px auto 0; }
-.picker-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.btn.ghost { border:1px solid rgba(255,255,255,.7); background:transparent; color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; }
-.available-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap:10px; }
-.avail-card { text-align:left; border:2px solid rgba(255,255,255,.7); background:rgba(0,0,0,.22); color:#fff; padding:10px; border-radius:12px; }
-.avail-card.disabled { opacity:.45; cursor:not-allowed; }
-.avail-name { font-weight:800; }
-.avail-meta { display:flex; gap:8px; font-size:12px; opacity:.9; flex-wrap:wrap; }
+.picker {
+  max-width: 1100px;
+  margin: 24px auto 0;
+}
+
+.picker-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.btn.ghost {
+  border: 1px solid rgba(255, 255, 255, .7);
+  background: transparent;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.available-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.avail-card {
+  text-align: left;
+  border: 2px solid rgba(255, 255, 255, .7);
+  background: rgba(0, 0, 0, .22);
+  color: #fff;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.avail-card.disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.avail-name {
+  font-weight: 800;
+}
+
+.avail-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  opacity: .9;
+  flex-wrap: wrap;
+}
 
 @media (max-width: 560px) {
-  .player-card { width: 120px; }
-  .pitch-lines { inset: 96px 4% 160px; }
+  .player-card {
+    width: 120px;
+  }
+
+  .pitch-lines {
+    inset: 96px 4% 160px;
+  }
 }
 
 
 .chip {
   display: inline-flex;
   align-items: center;
-  white-space: nowrap;         /* <- keeps "Sel 9.2%" together */
-  border: 1px solid rgba(255,255,255,.7);
+  white-space: nowrap;
+  /* <- keeps "Sel 9.2%" together */
+  border: 1px solid rgba(255, 255, 255, .7);
   border-radius: 999px;
   padding: 2px 8px;
   font-size: 11px;
@@ -98,29 +247,52 @@
 
 /* give cards a touch more room so chips don't crowd */
 .player-card {
-  min-width: 180px;            /* was 140; adjust if you want tighter */
+  min-width: 180px;
+  /* was 140; adjust if you want tighter */
   width: auto;
   max-width: 240px;
 }
 
 /* ensure the Formation select is readable on all browsers */
 .controls-row select {
-  background: rgba(0,0,0,.28);     /* darker so white text shows */
+  background: rgba(0, 0, 0, .28);
+  /* darker so white text shows */
   color: #fff;
-  border: 1px solid rgba(255,255,255,.7);
+  border: 1px solid rgba(255, 255, 255, .7);
   padding: 6px 10px;
   border-radius: 8px;
   -webkit-appearance: none;
   appearance: none;
 }
+
 .controls-row option {
-  color: #111;          /* dropdown options text */
-  background: #fff;     /* dropdown options bg */
+  color: #111;
+  /* dropdown options text */
+  background: #fff;
+  /* dropdown options bg */
 }
 
-.btn { border:1px solid rgba(255,255,255,.7); background:rgba(255,255,255,.12); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; }
-.btn:disabled { opacity:.6; cursor:not-allowed; }
-.chip { border:1px solid rgba(255,255,255,.6); border-radius:999px; padding:2px 8px; font-size:11px; line-height:1; }
+.btn {
+  border: 1px solid rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.chip {
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  line-height: 1;
+}
 
 .picker .filters {
   display: flex;
@@ -130,9 +302,9 @@
 
 .picker .filters input,
 .picker .filters select {
-  background: rgba(0,0,0,.28);
+  background: rgba(0, 0, 0, .28);
   color: #fff;
-  border: 1px solid rgba(255,255,255,.7);
+  border: 1px solid rgba(255, 255, 255, .7);
   padding: 6px 10px;
   border-radius: 8px;
 }
@@ -144,11 +316,298 @@
   font-size: 13px;
   opacity: .95;
 }
+
 .controls-row .toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255,255,255,.12);
+  background: rgba(255, 255, 255, .12);
   padding: 4px 8px;
   border-radius: 8px;
+}
+
+/* Ensure FDR pills render inside the floating widget */
+.next-fixture-widget .fdr-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.gw-fixtures-widget {
+  position: fixed;
+  top: 120px;
+  right: 16px;
+  z-index: 5;
+  background: rgba(0, 0, 0, .35);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #fff;
+  max-width: 320px;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+}
+
+/* Color mapping (scoped to widget so it wins over other rules) */
+.next-fixture-widget .fdr-1 {
+  background: #22c55e;
+  color: #062e0f;
+}
+
+.next-fixture-widget .fdr-2 {
+  background: #86efac;
+  color: #064e3b;
+}
+
+.next-fixture-widget .fdr-3 {
+  background: #d1d5db;
+  color: #1f2937;
+}
+
+.next-fixture-widget .fdr-4 {
+  background: #fdba74;
+  color: #7c2d12;
+}
+
+.next-fixture-widget .fdr-5 {
+  background: #ef4444;
+  color: #7f1d1d;
+}
+
+/* small layout niceties */
+.next-fixture-widget .ha-prefix {
+  opacity: .85;
+  font-weight: 600;
+}
+
+.next-fixture-widget .fixture-sep {
+  opacity: .7;
+}
+
+.next-fixture-widget .kickoff {
+  margin-top: 6px;
+  opacity: .9;
+}
+
+.next-fixture-widget .legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  opacity: .95;
+}
+
+.next-fixture-widget .legend .fdr-pill {
+  height: 18px;
+  min-width: 22px;
+  padding: 0 6px;
+  font-size: 10px;
+}
+
+.next-fixture-widget {
+  pointer-events: none;
+}
+
+.next-fixture-widget * {
+  pointer-events: auto;
+}
+
+/* style the colored team chips (background provided by fdr-1..fdr-5) */
+.next-fixture-widget .team-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  min-height: 22px;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #fff;
+}
+
+/* keep the inline layout tidy */
+.next-fixture-widget .fixture-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gw-fixtures-widget.left {
+  left: 16px;
+  right: auto;
+}
+
+.nfw-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.nfw-title {
+  font-weight: 800;
+}
+
+.nfw-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nfw-btn {
+  border: 1px solid rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  border-radius: 6px;
+  width: 26px;
+  height: 22px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nfw-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.nfw-count {
+  opacity: .85;
+  font-size: 12px;
+}
+
+.fixture-list {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fixture-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fixture-sep {
+  opacity: .7;
+}
+
+.kickoff {
+  opacity: .9;
+}
+
+.team-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  min-height: 22px;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #fff;
+}
+
+/* Make header tidy (and sticky while scrolling the list) */
+.gw-fixtures-widget .nfw-title-row {
+  position: sticky;
+  top: 0;
+  padding-bottom: 6px;
+  /*background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.25));*/
+  backdrop-filter: blur(2px);
+  z-index: 1;
+}
+
+.gw-fixtures-widget .nfw-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gw-fixtures-widget .nfw-btn {
+  width: 24px;
+  height: 24px;
+  line-height: 22px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.gw-fixtures-widget .nfw-count {
+  font-size: 12px;
+  opacity: .85;
+  min-width: 42px;
+  text-align: center;
+  background: rgba(255, 255, 255, .12);
+  border-radius: 999px;
+  padding: 2px 6px;
+}
+
+/* 2-column rows: left = teams, right = kickoff (no wrapping on time) */
+.gw-fixtures-widget .fixture-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.gw-fixtures-widget .teams {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  /* allows chips to shrink before pushing time down */
+  flex-wrap: wrap;
+  /* wraps chips if really narrow */
+}
+
+.gw-fixtures-widget .kickoff {
+  white-space: nowrap;
+  opacity: .9;
+}
+
+/* Slightly smaller chips so rows breathe */
+.gw-fixtures-widget .team-chip {
+  padding: 2px 8px;
+  min-height: 20px;
+  font-weight: 800;
+}
+
+.gw-fixtures-widget .fdr-1 {
+  background: #22c55e;
+  color: #062e0f;
+}
+
+.gw-fixtures-widget .fdr-2 {
+  background: #86efac;
+  color: #064e3b;
+}
+
+.gw-fixtures-widget .fdr-3 {
+  background: #d1d5db;
+  color: #1f2937;
+}
+
+.gw-fixtures-widget .fdr-4 {
+  background: #fdba74;
+  color: #7c2d12;
+}
+
+.gw-fixtures-widget .fdr-5 {
+  background: #ef4444;
+  color: #7f1d1d;
 }

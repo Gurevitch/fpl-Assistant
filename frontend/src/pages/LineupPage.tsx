@@ -1,16 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './LineupPage.css';
-import type { ActiveSlot, Formation, Player, Team } from '../types/fpl';
+import type { ActiveSlot, Formation, Player, Team, Fixture } from '../types/fpl';
 import { ALLOWED_FORMATIONS, scoreOf } from '../utils/fpl';
 import { importFPL, loadPlayers, loadTeams } from '../api/fpl';
 import { isCompatibleDrag, useLineup } from '../hooks/useLineup';
 import Pitch from '../components/Pitch';
 import Picker from '../components/Picker';
+import { loadFixtures } from '../api/fpl';
+import GWFixturesWidget from '../components/GWFixturesWidget';
 
 export default function LineupPage() {
     const [teams, setTeams] = useState<Record<number, Team>>({});
     const [pool, setPool] = useState<Player[]>([]);
     const [isUpdating, setIsUpdating] = useState(false);
+    const [fixtures, setFixtures] = useState<Fixture[]>([]);
     const [updateStatus, setUpdateStatus] = useState<'idle' | 'ok' | 'error'>('idle');
     // Bench Boost toggle (controls whether bench is counted)
     const [chips, setChips] = useState({ bboost: false });
@@ -22,9 +25,9 @@ export default function LineupPage() {
 
     // load data
     const refresh = useCallback(async () => {
-        const [t, p] = await Promise.all([loadTeams(), loadPlayers()]);
+        const [t, p, f] = await Promise.all([loadTeams(), loadPlayers(), loadFixtures()]);
         p.sort((a, b) => scoreOf(b) - scoreOf(a));
-        setTeams(t); setPool(p);
+        setTeams(t); setPool(p); setFixtures(f);
     }, []);
     useEffect(() => { refresh().catch(() => { }); }, [refresh]);
 
@@ -138,6 +141,12 @@ export default function LineupPage() {
 
     return (
         <div className="pitch">
+            <GWFixturesWidget
+                teams={teams}
+                fixtures={fixtures}
+                side="right"          // or "left"
+                initialEvent={'auto'}      // ← show all games for GW 4; set to 'auto' to default to next GW
+            />
             <div className="pitch-lines" />
 
             <div className="top-bar">

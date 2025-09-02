@@ -14,10 +14,14 @@ import (
 	"bitbucket.org/Local/fpl-assistant/backend/internal/repository"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
+const fplFixturesURL = "https://fantasy.premierleague.com/api/fixtures/?future=1"
+const fplPlayersURL = "https://fantasy.premierleague.com/api/bootstrap-static/"
+
 func ImportFPLData(ctx context.Context) error {
-	resp, err := http.Get("https://fantasy.premierleague.com/api/bootstrap-static/")
+	resp, err := http.Get(fplPlayersURL)
 	if err != nil {
 		return fmt.Errorf("❌ failed to fetch FPL data: %w", err)
 	}
@@ -49,6 +53,11 @@ func ImportFPLData(ctx context.Context) error {
 	}
 
 	log.Println("✅ Players imported")
+
+	if err := ImportFixtures(ctx, db); err != nil {
+		return fmt.Errorf("❌ insert fixtures failed: %w", err)
+	}
+	log.Println("✅ Fixtures imported")
 
 	if err := importChips(db, data.Chips); err != nil {
 		return fmt.Errorf("❌ insert chips failed: %w", err)
@@ -84,6 +93,7 @@ func importPlayers(db *gorm.DB, players []model.FplPlayer) error {
 			EventPoints:       p.EventPoints,
 			UpdatedAt:         time.Now(),
 			CreatedAt:         time.Now(),
+			IctIndex:          p.IctIndex,
 		}
 
 		var existing model.Player
@@ -139,6 +149,51 @@ func importChips(db *gorm.DB, chips []model.FplChip) error {
 		}
 	}
 	return nil
+}
+
+func ImportFixtures(ctx context.Context, db *gorm.DB) error {
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, fplFixturesURL, nil)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("fetch fixtures: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var rowsDTO []model.FplFixtureDTO
+	if err := json.NewDecoder(resp.Body).Decode(&rowsDTO); err != nil {
+		return fmt.Errorf("decode fixtures: %w", err)
+	}
+
+	rows := make([]model.Fixture, 0, len(rowsDTO))
+	for _, fx := range rowsDTO {
+		rows = append(rows, model.Fixture{
+			ID:                   fx.ID,
+			Event:                fx.Event,
+			KickoffTime:          fx.KickoffTime,
+			Started:              fx.Started,
+			Finished:             fx.Finished,
+			ProvisionalStartTime: fx.ProvisionalStartTime,
+			TeamHID:              uint(fx.TeamH), // ← uses Team.ID you already saved
+			TeamAID:              uint(fx.TeamA),
+			TeamHScore:           fx.TeamHScore,
+			TeamAScore:           fx.TeamAScore,
+			TeamHDifficulty:      fx.TeamHDifficulty,
+			TeamADifficulty:      fx.TeamADifficulty,
+			Minutes:              fx.Minutes,
+			PulseID:              fx.PulseID,
+			Code:                 fx.Code,
+		})
+	}
+
+	// Upsert on fixture ID so re-runs are safe
+	return db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "id"}},
+		DoUpdates: clause.AssignmentColumns([]string{
+			"event", "kickoff_time", "started", "finished", "provisional_start_time",
+			"team_h_id", "team_a_id", "team_h_score", "team_a_score",
+			"team_h_difficulty", "team_a_difficulty", "minutes", "pulse_id", "code",
+		}),
+	}).Create(&rows).Error
 }
 func mapPosition(elementType int) string {
 	switch elementType {

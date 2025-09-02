@@ -25,6 +25,7 @@ type Player struct {
 	CreatedAt         time.Time `gorm:"CreatedAt" json:"-"`
 	UpdatedAt         time.Time `gorm:"UpdatedAt" json:"-"`
 	PrettyUpdatedAt   string    `gorm:"-" json:"UpdatedAt"`
+	IctIndex          string    `gorm:"IctIndex" json:"ict_index"`
 }
 
 func (Player) TableName() string {

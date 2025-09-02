@@ -45,7 +45,7 @@ func newSQLiteDB(database string) (*gorm.DB, error) {
 	if err := gormDB.AutoMigrate(
 		&model.Team{},
 		&model.Player{},
-		&model.Gameweek{},
+		&model.Fixture{},
 		&model.Chip{},
 		&model.UserTeam{},
 		&model.UserTeamPlayer{},

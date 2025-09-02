@@ -1,5 +1,7 @@
 import type { Team, Player } from '../types/fpl';
 import { mapPos, normalizePrice, toNum } from '../utils/fpl';
+import type { Fixture } from '../types/fpl';
+
 
 export async function loadTeams(): Promise<Record<number, Team>> {
     const r = await fetch('/v1/teams');
@@ -16,7 +18,22 @@ export async function loadTeams(): Promise<Record<number, Team>> {
     });
     return map;
 }
-
+export async function loadFixtures(): Promise<Fixture[]> {
+    const res = await fetch('/v1/fixtures');
+    if (!res.ok) return [];
+    const rows: any[] = await res.json();
+    return rows.map((f: any): Fixture => ({
+        id: f.ID ?? f.id,
+        event: f.Event ?? f.event ?? null,
+        kickoff_time: (f.KickoffTime ?? f.kickoff_time ?? null),
+        started: !!(f.Started ?? f.started),
+        finished: !!(f.Finished ?? f.finished),
+        team_a: f.TeamAID ?? f.team_a,
+        team_h: f.TeamHID ?? f.team_h,
+        team_a_difficulty: (f.TeamADifficulty ?? f.team_a_difficulty) as 1 | 2 | 3 | 4 | 5,
+        team_h_difficulty: (f.TeamHDifficulty ?? f.team_h_difficulty) as 1 | 2 | 3 | 4 | 5,
+    }));
+}
 export async function loadPlayers(): Promise<Player[]> {
     const r = await fetch('/v1/players');
     const rows = await r.json();

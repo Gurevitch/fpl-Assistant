@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type FplResponse struct {
 	Teams   []FplTeam   `json:"teams"`
 	Players []FplPlayer `json:"elements"`
@@ -46,4 +48,23 @@ type FplPlayer struct {
 	Form              string  `json:"form"`
 	WebName           string  `json:"web_name"`
 	EventPoints       int     `json:"event_points"`
+	IctIndex          string  `json:"ict_index"`
+}
+
+type FplFixtureDTO struct {
+	ID                   int        `json:"id"`
+	Event                *int       `json:"event"`
+	KickoffTime          *time.Time `json:"kickoff_time"`
+	Started              bool       `json:"started"`
+	Finished             bool       `json:"finished"`
+	ProvisionalStartTime bool       `json:"provisional_start_time"`
+	TeamA                int        `json:"team_a"`
+	TeamAScore           *int       `json:"team_a_score"`
+	TeamH                int        `json:"team_h"`
+	TeamHScore           *int       `json:"team_h_score"`
+	TeamADifficulty      int        `json:"team_a_difficulty"`
+	TeamHDifficulty      int        `json:"team_h_difficulty"`
+	Minutes              int        `json:"minutes"`
+	PulseID              int        `json:"pulse_id"`
+	Code                 int        `json:"code"`
 }

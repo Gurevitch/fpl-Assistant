@@ -36,7 +36,7 @@ func newPostgresDB(ctx context.Context, username, password, host string, port in
 	if err := gormDB.AutoMigrate(
 		&model.Team{},
 		&model.Player{},
-		&model.Gameweek{},
+		&model.Fixture{},
 		&model.UserTeam{},
 		&model.UserTeamPlayer{},
 	); err != nil {
