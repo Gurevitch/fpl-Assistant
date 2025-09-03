@@ -611,3 +611,89 @@
   background: #ef4444;
   color: #7f1d1d;
 }
+
+/* Floating chat box (bottom-right) */
+.chatbox {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: min(420px, calc(100vw - 32px));
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, .45);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: 12px;
+  color: #fff;
+  z-index: 10;
+}
+
+.chatbox-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, .25);
+}
+
+.chatbox-head .spacer {
+  flex: 1;
+}
+
+.chatbox-close {
+  border: 1px solid rgba(255, 255, 255, .6);
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.chatbox-body {
+  flex: 1;
+  overflow: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bubble {
+  max-width: 90%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+}
+
+.bubble.user {
+  align-self: flex-end;
+  background: rgba(59, 130, 246, .35);
+  border: 1px solid rgba(59, 130, 246, .6);
+}
+
+.bubble.assistant {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .35);
+}
+
+.chatbox-input {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border-top: 1px solid rgba(255, 255, 255, .25);
+}
+
+.chatbox-input textarea {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  resize: vertical;
+  background: rgba(0, 0, 0, .28);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: 8px;
+  padding: 6px 8px;
+}

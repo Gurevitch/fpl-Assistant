@@ -111,7 +111,16 @@ func importPlayers(db *gorm.DB, players []model.FplPlayer) error {
 			if existing.TeamID == player.TeamID &&
 				existing.Position == player.Position &&
 				existing.CurrentPrice == player.CurrentPrice &&
-				existing.TotalPoints == player.TotalPoints {
+				existing.TotalPoints == player.TotalPoints &&
+				existing.Form == player.Form &&
+				existing.SelectedByPercent == player.SelectedByPercent &&
+				existing.TransfersIn == player.TransfersIn &&
+				existing.TransfersInEvent == player.TransfersInEvent &&
+				existing.TransfersOut == player.TransfersOut &&
+				existing.TransfersOutEvent == player.TransfersOutEvent &&
+				existing.ValueForm == player.ValueForm &&
+				existing.EventPoints == player.EventPoints &&
+				existing.IctIndex == player.IctIndex {
 				continue // ✅ Skip if unchanged
 			}
 

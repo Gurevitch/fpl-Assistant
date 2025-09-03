@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"bitbucket.org/Local/fpl-assistant/backend/internal/ai"
 	"bitbucket.org/Local/fpl-assistant/backend/internal/fplimporter"
@@ -13,11 +14,15 @@ import (
 	"github.com/go-chi/chi"
 )
 
+type askReq struct {
+	Message string `json:"message"`
+}
+
 func NewV1Router() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/admin/import-fpl", ImportFPLHandler)
-	r.Post("/ask-ai", AskGeminiHandler)
+	r.Post("/ask-ai", AskAIHandler)
 
 	r.Get("/players", GetAllPlayers)
 	r.Get("/teams", GetAllTeams)
@@ -67,20 +72,22 @@ func GetAllFixtures(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(fixtures)
 }
-func AskGeminiHandler(w http.ResponseWriter, r *http.Request) {
-	var req struct {
-		Message string `json:"message"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+func AskAIHandler(w http.ResponseWriter, r *http.Request) {
+	var req askReq
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Message == "" {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
 
-	resp, err := ai.CallGemini(req.Message)
+	ctx, cancel := context.WithTimeout(r.Context(), 25*time.Second)
+	defer cancel()
+
+	reply, err := ai.CallGemini(ctx, req.Message)
 	if err != nil {
-		http.Error(w, "Gemini API failed", http.StatusInternalServerError)
+		http.Error(w, "Gemini API failed: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"reply": resp})
+	_ = json.NewEncoder(w).Encode(map[string]string{"reply": reply})
 }

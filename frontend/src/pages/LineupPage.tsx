@@ -4,6 +4,7 @@ import type { ActiveSlot, Formation, Player, Team, Fixture } from '../types/fpl'
 import { ALLOWED_FORMATIONS, scoreOf } from '../utils/fpl';
 import { importFPL, loadPlayers, loadTeams } from '../api/fpl';
 import { isCompatibleDrag, useLineup } from '../hooks/useLineup';
+import ChatBox from '../components/ChatBox';
 import Pitch from '../components/Pitch';
 import Picker from '../components/Picker';
 import { loadFixtures } from '../api/fpl';
@@ -199,6 +200,13 @@ export default function LineupPage() {
                 teams={teams}
                 canAssign={canAssign}
                 onPick={onPick}
+            />
+
+            <ChatBox
+                teams={teams}
+                starters={L.starters}
+                bench={L.bench}
+                budgetLeft={budgetLeft}
             />
         </div>
     );
